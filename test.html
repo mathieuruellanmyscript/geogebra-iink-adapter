@@ -1,0 +1,35 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>GeoGebra input method adapter - local test</title>
+<script>
+  // edit if your paths differ
+  var WAR = 'http://localhost:8080';               // serves source/web/web/war
+  var ADAPTER = 'http://localhost:8090/ggb-iink-adapter.js';
+</script>
+<style>
+  body { font: 14px system-ui, sans-serif; margin: 16px; }
+  #log { white-space: pre-wrap; font-family: monospace; color: #555; }
+</style>
+<h1>Input method adapter test</h1>
+<div id="ggb"></div>
+<p id="log"></p>
+<script>
+  document.write('<script src="' + WAR + '/web3d/web3d.nocache.js"><\/script>');
+</script>
+<script>
+  window.addEventListener('error', function (e) {
+    document.getElementById('log').textContent += 'error: ' + e.message + '\n';
+  });
+  window.addEventListener('load', function () {
+    var container = document.getElementById('ggb');
+    container.className = 'applet_container';
+    container.setAttribute('data-param-appName', 'graphing');
+    container.setAttribute('data-param-inputMethodUrl', ADAPTER);
+    container.setAttribute('data-param-showKeyboardOnFocus', 'true');
+    container.setAttribute('data-param-width', '900');
+    container.setAttribute('data-param-height', '600');
+    if (window.renderGGBElement) {
+      window.renderGGBElement(container);
+    }
+  });
+</script>
