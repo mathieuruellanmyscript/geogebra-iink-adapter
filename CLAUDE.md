@@ -15,7 +15,7 @@ four hand-written files plus one vendored iink-ts asset (`iink.min.js`).
 ```
 
 Then open `test.html` (needs a local GeoGebra war on :8080), or point any
-applet at `http://localhost:8090/ggb-iink-adapter.js` via
+applet at `http://localhost:8090/myscript-iink-adapter.js` via
 `data-param-inputMethodUrl`. See README.md for the applet snippet.
 
 Upgrading iink-ts = replacing `iink.min.js` and `iink.min.js.map` (from the same
@@ -37,7 +37,7 @@ GeoGebra loads this one script by URL and knows nothing about iink — that is w
 the repo lives outside the GeoGebra tree. Keep MyScript-specific code here and
 resist adding GeoGebra-side assumptions.
 
-`ggb-iink-adapter.js` is an IIFE that:
+`myscript-iink-adapter.js` is an IIFE that:
 
 1. Derives `IINK_BASE` from `document.currentScript.src`, so `iink.min.js` is
    always fetched relative to the adapter's own URL. This is why `file://` does

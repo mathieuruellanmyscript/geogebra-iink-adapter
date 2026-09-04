@@ -8,20 +8,20 @@ Lives outside the GeoGebra repo on purpose: GeoGebra only knows the
 
 | file | what |
 |---|---|
-| `ggb-iink-adapter.js` | the adapter — the only file GeoGebra loads |
+| `myscript-iink-adapter.js` | the adapter — the only file GeoGebra loads |
 | `iink.min.js` | iink-ts 4.1.0, loaded by the adapter, relative to its own URL |
 | `serve.sh` | `python3 -m http.server 8090` over this directory |
 
 Replace `iink.min.js` with any newer iink-ts release without touching GeoGebra.
 4.x ships no `iink.css` — styles live in the bundle — and its entry point is
 `iink.Canvas.load(element, 'INTERACTIVE_INK', options)`, so an upgrade across a
-major version may need matching edits in `ggb-iink-adapter.js`.
+major version may need matching edits in `myscript-iink-adapter.js`.
 
 ## Run
 
 ```sh
 ./serve.sh
-# -> http://localhost:8090/ggb-iink-adapter.js
+# -> http://localhost:8090/myscript-iink-adapter.js
 ```
 
 Then point a GeoGebra applet at it:
@@ -29,7 +29,7 @@ Then point a GeoGebra applet at it:
 ```html
 <div class="applet_container"
      data-param-appName="graphing"
-     data-param-inputMethodUrl="http://localhost:8090/ggb-iink-adapter.js"
+     data-param-inputMethodUrl="http://localhost:8090/myscript-iink-adapter.js"
      data-param-showKeyboardOnFocus="true"
      data-param-width="800" data-param-height="600"></div>
 <script src="https://www.geogebra.org/apps/deployggb.js"></script>
