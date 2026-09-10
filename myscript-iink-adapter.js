@@ -13,6 +13,10 @@
   var IINK_BASE = new URL('.', document.currentScript.src).href;
   var assets = null;
 
+  // Fixed default keys, for this reference host. Public repo: rotate on abuse.
+  var DEFAULT_APPLICATION_KEY = '2d9f86d7-d163-435e-bd0e-835d2b9716fb';
+  var DEFAULT_HMAC_KEY = 'e2b8ce99-16d4-4dc5-a4dd-3319510ac87c';
+
   function loadAssets() {
     if (assets) {
       return assets;
@@ -36,8 +40,8 @@
         server: {
           scheme: 'https',
           host: 'cloud.myscript.com',
-          applicationKey: settings.applicationKey,
-          hmacKey: settings.hmacKey
+          applicationKey: settings.applicationKey || DEFAULT_APPLICATION_KEY,
+          hmacKey: settings.hmacKey || DEFAULT_HMAC_KEY
         },
         recognition: {
           'raw-content': {

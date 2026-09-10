@@ -69,6 +69,8 @@ CORS-checked, which is what lets the stdlib http server suffice — switching to
 
 ## Known caveat
 
-The HMAC key is normally a server-side secret; here it sits in the browser's
-localStorage and is readable via devtools. Acceptable for this reference host,
-not for production.
+The HMAC key is normally a server-side secret. Here it is hardcoded in
+`myscript-iink-adapter.js` as a default (settings can still override it) and
+also sits in the browser's localStorage, readable via devtools. This repo is
+public, so both keys are public too — acceptable only for this reference
+host; rotate them if abused, never reuse for production.
