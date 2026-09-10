@@ -44,9 +44,9 @@ resist adding GeoGebra-side assumptions.
    not work.
 2. Lazy-loads that script on first `mount` (memoized in `assets`; the promise
    is reset to `null` on error so a later mount can retry).
-3. Declares two `settings` (`applicationKey`, `hmacKey`). GeoGebra prompts for
-   them and persists them in localStorage under `inputMethod.iink.*`, then hands
-   them back as `context.settings`.
+3. No `settings` declared, so GeoGebra never prompts. `applicationKey`/
+   `hmacKey` are the hardcoded `DEFAULT_*` constants; `context.settings` (if
+   GeoGebra ever passes one) can still override them.
 4. Returns a `{ clear, resize, destroy }` handle from `mount`, each guarded
    because `canvas` is only assigned after the async `iink.Canvas.load` resolves.
 

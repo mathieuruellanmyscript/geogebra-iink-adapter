@@ -35,6 +35,7 @@
   }
 
   function configuration(settings) {
+    settings = settings || {};
     return {
       configuration: {
         server: {
@@ -61,6 +62,25 @@
     };
   }
 
+  // GeoGebra's algebra input parses bare {...} as a list, not a LaTeX group,
+  // so "x^{2}" becomes x times the list {2}. Rewrite braced sub/superscripts
+  // to GeoGebra's own syntax (parens) before handing the LaTeX to onResult.
+  function toGeoGebraSyntax(latex) {
+    var result = latex;
+    var previous;
+    // Braces can nest (e.g. "^{3^{3}}"), so re-run brace/command rewrites
+    // until nothing changes: each pass only converts the innermost level.
+    do {
+      previous = result;
+      result = result.replace(/([\^_])\{([^{}]*)\}/g, '$1($2)');
+      result = result.replace(/\\sqrt\{([^{}]*)\}/g, 'sqrt($1)');
+      result = result.replace(/\\d?frac\{([^{}]*)\}\{([^{}]*)\}/g, '($1)/($2)');
+    } while (result !== previous);
+    // \left( / \right) etc. are just sizing hints; GeoGebra wants plain delimiters.
+    result = result.replace(/\\left|\\right/g, '');
+    return result.replace(/\s+/g, '');
+  }
+
   // INTERACTIVE_INK exports JIIX only; the LaTeX of a math block is its label.
   function latexFrom(exports) {
     var jiix = exports && exports['application/vnd.myscript.jiix'];
@@ -77,16 +97,14 @@
   window.GeoGebraInputMethods.register({
     id: 'iink',
     label: 'MyScript handwriting',
-    settings: [
-      { key: 'applicationKey', label: 'MyScript application key' },
-      { key: 'hmacKey', label: 'MyScript HMAC key', secret: true }
-    ],
 
     mount: function (element, context) {
       var canvas = null;
 
       element.addEventListener('exported', function (event) {
-        var latex = latexFrom(event.detail);
+        var rawLatex = latexFrom(event.detail);
+        var latex = toGeoGebraSyntax(rawLatex);
+        console.log('[iink-adapter] latex -> ggb:', rawLatex, '->', latex);
         if (latex) {
           context.onResult(latex);
         }
