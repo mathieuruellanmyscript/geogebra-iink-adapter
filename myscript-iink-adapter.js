@@ -77,6 +77,7 @@
         return /^[0-9a-zA-Z]$/.test(inner) ? op + inner : op + '(' + inner + ')';
       });
       result = result.replace(/\\sqrt\{([^{}]*)\}/g, 'sqrt($1)');
+      result = result.replace(/\\(sin|cos)\b/g, '$1');
       result = result.replace(/\\d?frac\{([^{}]*)\}\{([^{}]*)\}/g, '($1)/($2)');
     } while (result !== previous);
     // \left( / \right) etc. are just sizing hints; GeoGebra wants plain delimiters.
