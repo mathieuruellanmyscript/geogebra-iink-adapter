@@ -72,7 +72,10 @@
     // until nothing changes: each pass only converts the innermost level.
     do {
       previous = result;
-      result = result.replace(/([\^_])\{([^{}]*)\}/g, '$1($2)');
+      // A single alphanumeric char needs no grouping: x^{2} -> x^2, not x^(2).
+      result = result.replace(/([\^_])\{([^{}]*)\}/g, function (m, op, inner) {
+        return /^[0-9a-zA-Z]$/.test(inner) ? op + inner : op + '(' + inner + ')';
+      });
       result = result.replace(/\\sqrt\{([^{}]*)\}/g, 'sqrt($1)');
       result = result.replace(/\\d?frac\{([^{}]*)\}\{([^{}]*)\}/g, '($1)/($2)');
     } while (result !== previous);
