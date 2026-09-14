@@ -18,6 +18,13 @@ Then open `test.html` (needs a local GeoGebra war on :8080), or point any
 applet at `http://localhost:8090/myscript-iink-adapter.js` via
 `data-param-inputMethodUrl`. See README.md for the applet snippet.
 
+After pushing to GitHub, purge the jsDelivr CDN cache so consumers pointed at
+the `gh` CDN path pick up the change immediately:
+
+```sh
+curl https://purge.jsdelivr.net/gh/mathieuruellanmyscript/geogebra-iink-adapter@main/myscript-iink-adapter.js
+```
+
 Upgrading iink-ts = replacing `iink.min.js` and `iink.min.js.map` (from the same
 npm `iink-ts` release, `dist/iink.min.js.map`); nothing else changes as long as
 the API does not. Vendored version is **4.1.0** (iink-ts 4.x ships no `iink.css` —
@@ -66,6 +73,18 @@ Written in ES5-style plain JS (`var`, `function`, no modules) so it can be
 served as a classic script. Classic `<script>` loads are not
 CORS-checked, which is what lets the stdlib http server suffice — switching to
 `fetch` or ES modules would require CORS headers on the host.
+
+`toGeoGebraSyntax()` fixes up the exported LaTeX before it reaches
+`context.onResult`, since GeoGebra's algebra-input parser is not a LaTeX
+parser and rejects/misreads plain LaTeX braces and sizing commands: braced
+sub/superscripts (`^{..}`/`_{..}`) become `^(..)`/`_(..)`, `\sqrt{..}` becomes
+`sqrt(..)`, `\frac{..}{..}`/`\dfrac{..}{..}` become `(..)/(..)`, and
+`\left`/`\right` are stripped. Braces can nest (e.g. `^{3^{3}}`), so the
+rewrite passes loop to a fixed point rather than running once. Any newly
+observed bad conversion should be checked against the live GeoGebra algebra
+input bar, not against `iink.min.js`'s JIIX renderer or GeoGebra's own
+JLaTeXMath renderer (`Commands.java` upstream) — neither implements the
+algebra-input parser's grammar.
 
 ## Known caveat
 
