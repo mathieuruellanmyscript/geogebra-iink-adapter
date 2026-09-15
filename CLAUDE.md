@@ -14,6 +14,14 @@ four hand-written files plus one vendored iink-ts asset (`iink.min.js`).
 ./serve.sh   # python3 -m http.server 8090 over this directory
 ```
 
+Dev key override: copy `.env.example` to `.env` (gitignored) and fill
+`MYSCRIPT_APPLICATION_KEY` / `MYSCRIPT_HMAC_KEY`. `serve.sh` turns it into
+`dev-keys.js` (gitignored, regenerated/removed on every run). The adapter loads
+that file itself before `iink.min.js` — only when served from localhost, and a
+404 is fine — then prefers `window.MYSCRIPT_DEV_KEYS` over its `DEFAULT_*`
+constants (`context.settings` still wins over both). So any applet pointed at
+the local adapter URL picks up the keys, not just `test.html`.
+
 Then open `test.html` (needs a local GeoGebra war on :8080), or point any
 applet at `http://localhost:8090/myscript-iink-adapter.js` via
 `data-param-inputMethodUrl`. See README.md for the applet snippet.
